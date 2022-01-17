@@ -48,7 +48,7 @@
 
             guessCells(table, adjacent, random); 
         }
-        createTable(10, 10);
+        createTable(20, 40);
 
         function getAdjacentCells(table, x) {
             let tds = table.querySelectorAll('td');
@@ -132,6 +132,8 @@
                 let merged = new Set([...up, ...down]);
                 
                 openRestEmpty(merged, table, adjacent, rest);
+
+                // except cells that aren't fit (when near cells located by diaginal)
             }
             rest.forEach(element => element.style.backgroundColor = 'lightgrey');
             rest.forEach(element => element.addEventListener('click', open));
@@ -224,7 +226,7 @@
                 let nearTds = allTrs[indx].children;
                 let nearTdsNums = [...nearTds].map(function(elem) {return +elem.id});
                 let filtered = nearTdsNums.filter(num => [...set].includes(num) && restIDs.includes(num));
-                let firstElems = getFirstElemsOfSubArrs(filtered);
+                let firstElems = getFirstElemsOfSubArr(filtered);
 
                 for (let first of firstElems) {
                     let nearTd = document.getElementById(first);
@@ -232,26 +234,25 @@
                     [...subset].forEach(element => set.add(element));
                 }
             } else {
-                return new Set();
+                return set;
             }
             return set;
         }
-        //2
-        //add condition -> look up/down tr -> if exist in set, but doesn't have condition -> split arr and apply func 'open' to each 'first element'
-        //if 'up' --> go down and vise versa
 
         function openRestEmpty([...merged], table, adjacent, rest) {
             let restIDs = rest.map(function(elem) {return +elem.id});
             let tds = table.querySelectorAll('td');
+            let mergedSet = new Set(merged);
+            let restEmptyIDs = [];
 
             for (let td of tds) {
                 if (restIDs.indexOf(+td.id) != -1 && td.dataset.opened == undefined){
-                    
+
                     let adjCells = adjacent.get(td.id);
 
                     let bool1 = adjCells.some(function(elem) {
                         let tdElem = document.getElementById(elem);
-
+                        
                         if (merged.indexOf(elem) != -1 && tdElem.dataset.near == undefined) {
                             return true;
                         } else {
@@ -260,19 +261,34 @@
                     });
 
                     if (bool1) {
-                        console.log(td);
+                        restEmptyIDs.push(+td.id);
                     }
                 }
             }
 
-            console.log(merged);
-            console.log(table);
-            console.log(adjacent);
-            console.log(restIDs);
+            if (restEmptyIDs[0]) {
+                let shortEmptyIDs = getFirstElemsOfSubArr(restEmptyIDs);
+                let restTds = new Set();
+    
+                shortEmptyIDs.forEach(tdId => {
+                    let tdElem = document.getElementById(tdId);
+                    let up = openEmptyCells.call(tdElem, table, adjacent, rest, 'up');
+                    let down = openEmptyCells.call(tdElem, table, adjacent, rest, 'down');
+                    restTds.add([...up, ...down]);
+                });
+
+                let expanded = mergedSet.add([...restTds]);
+                let fullSet = openRestEmpty([...expanded], table, adjacent, rest);
+                mergedSet.add([...fullSet]);
+                
+            } else {
+                return mergedSet;
+            }
+            return mergedSet;
         }
         
         
-        function getFirstElemsOfSubArrs(arr) {
+        function getFirstElemsOfSubArr(arr) {
             let index = 0;
             let firstElems = [];
 
