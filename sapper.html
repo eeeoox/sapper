@@ -130,8 +130,13 @@
                 let up = openEmptyCells.call(e.target, table, adjacent, rest, 'up');
                 let down = openEmptyCells.call(e.target, table, adjacent, rest, 'down');
                 let merged = new Set([...up, ...down]);
-                
-                openRestEmpty(merged, table, adjacent, rest);
+                let fullSet = openRestEmpty(merged, table, adjacent, rest);
+
+                for (let td of tds) {
+                    if (td.dataset.opened == 'true' && td.dataset.near != undefined) {
+                        showNumOfBombs.call(td);
+                    }
+                }
 
                 // except cells that aren't fit (when near cells located by diaginal)
             }
@@ -244,43 +249,28 @@
             let tds = table.querySelectorAll('td');
             let mergedSet = new Set(merged);
             let restEmptyIDs = [];
-
+            
             for (let td of tds) {
-                if (restIDs.indexOf(+td.id) != -1 && td.dataset.opened == undefined){
-
-                    let adjCells = adjacent.get(td.id);
-
-                    let bool1 = adjCells.some(function(elem) {
-                        let tdElem = document.getElementById(elem);
-                        
-                        if (merged.indexOf(elem) != -1 && tdElem.dataset.near == undefined) {
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    });
-
-                    if (bool1) {
-                        restEmptyIDs.push(+td.id);
-                    }
+                if (restIDs.indexOf(+td.id) != -1 && td.dataset.opened == 'true' && td.dataset.passed == undefined) {
+                    restEmptyIDs.push(+td.id);
                 }
             }
-
+            
             if (restEmptyIDs[0]) {
                 let shortEmptyIDs = getFirstElemsOfSubArr(restEmptyIDs);
-                let restTds = new Set();
-    
+                
                 shortEmptyIDs.forEach(tdId => {
                     let tdElem = document.getElementById(tdId);
                     let up = openEmptyCells.call(tdElem, table, adjacent, rest, 'up');
                     let down = openEmptyCells.call(tdElem, table, adjacent, rest, 'down');
-                    restTds.add([...up, ...down]);
-                });
 
-                let expanded = mergedSet.add([...restTds]);
-                let fullSet = openRestEmpty([...expanded], table, adjacent, rest);
-                mergedSet.add([...fullSet]);
+                    [...up].forEach(item => mergedSet.add(item));
+                    [...down].forEach(item => mergedSet.add(item));
+                })
                 
+                let fullSet = openRestEmpty([...mergedSet], table, adjacent, rest);
+                [...fullSet].forEach(item => mergedSet.add(item));
+
             } else {
                 return mergedSet;
             }
@@ -320,9 +310,12 @@
 
         function fillSet(i, set, restIDs, adjacent) {
             if ([...set].indexOf(i) != -1 && restIDs.indexOf(i) != -1) {
-                
+                let cell = document.getElementById(i);
                 let adjCells = adjacent.get(i.toString());
+
                 adjCells.forEach(elem => set.add(elem));
+                set.add(i);
+                cell.dataset.passed = true;
             }
             return set; 
         }
