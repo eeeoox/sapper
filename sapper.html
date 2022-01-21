@@ -10,6 +10,18 @@
 </head>
 <body>
     <div id="container"></div>
+    <div id="start-window">
+        <button>Young sapper (8x8)</button>
+        <button>Experienced sapper (15x15)</button>
+        <button>Professional sapper (20x30)</button>
+        <button>Create own field</button>
+        <div id="own-table">
+            <input type="text" placeholder="columns">
+            <input type="text" placeholder="rows">
+            <input type="text" placeholder="amount of mines">
+        </div>
+        <button>Start</button>
+    </div>
     <script>
         let container = document.getElementById('container');
         createTable(20, 70, container);
