@@ -9,22 +9,51 @@
     <link rel="stylesheet" href="sapper.css">
 </head>
 <body>
-    <div id="container"></div>
     <div id="start-window">
-        <button>Young sapper (8x8)</button>
-        <button>Experienced sapper (15x15)</button>
-        <button>Professional sapper (20x30)</button>
-        <button>Create own field</button>
-        <div id="own-table">
-            <input type="text" placeholder="columns">
-            <input type="text" placeholder="rows">
-            <input type="text" placeholder="amount of mines">
-        </div>
-        <button>Start</button>
+        <p id="start-message">Welcome, sapper! We need your help... Choose your skills and get started.</p>
+        <ul id="start-list">
+            <li class="start-list-item">
+                <a href="#!" class="level" data-column="8" data-row="8" data-mine="10">Young sapper (8x8)</a>
+            </li>
+
+            <li class="start-list-item">
+                <a href="#!" class="level" data-column="15" data-row="15" data-mine="40">Experienced sapper (15x15)</a>
+            </li>
+
+            <li class="start-list-item">
+                <a href="#!" class="level" data-column="30" data-row="20" data-mine="100">Professional sapper (20x30)</a>
+            </li>
+
+            <li class="start-list-item">
+                <a href="#!" id="start-btn">Start</a>
+            </li>
+        </ul>
     </div>
+    <div id="container"></div>
     <script>
         let container = document.getElementById('container');
-        createTable(20, 70, container);
+        let levels = document.getElementsByClassName('level');
+        let startBtn = document.getElementById('start-btn');
+        let startWindow = document.getElementById('start-window');
+
+        for (let level of levels) {
+            level.addEventListener('click', function(){
+                
+                for (let level of levels) {
+                    level.dataset.picked = false;
+                }
+                this.dataset.picked = true;
+            });
+        }
+
+        startBtn.addEventListener('click', function(){
+            for (let level of levels) {
+                if (level.dataset.picked == 'true'){
+                    createTable(level.dataset.column, level.dataset.row, level.dataset.mine, container);
+                    startWindow.style.display = 'none';
+                }
+            }
+        });
     </script>
 </body>
 </html>

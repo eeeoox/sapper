@@ -1,12 +1,12 @@
 
-function createTable(size, random, container) {
+function createTable(columns, rows, random, container) {
     let table = document.createElement('table');
     let idNum = 1; 
 
-    for (let i = 0; i < size; i++) {
+    for (let i = 0; i < +rows; i++) {
         let tr = document.createElement('tr');
         
-        for (let j = 0; j < size; j++) {
+        for (let j = 0; j < +columns; j++) {
             let td = document.createElement('td');
 
             td.id = idNum;
@@ -17,9 +17,9 @@ function createTable(size, random, container) {
     }
     container.append(table);
 
-    let adjacent = getAdjacentCells(table, size);
+    let adjacent = getAdjacentCells(table, +columns);
 
-    guessCells(table, adjacent, random); 
+    guessCells(table, adjacent, +random); 
 }
 
 function getAdjacentCells(table, x) {
@@ -94,30 +94,38 @@ function guessCells(table, adjacent, random) {
         }
     }
     let {bombs, nearCells, rest} = separateBombsAndNear(table, adjacent, randoms);
-
     
     let open = (e) => {
         let up = openEmptyCells.call(e.target, table, adjacent, rest, 'up');
         let down = openEmptyCells.call(e.target, table, adjacent, rest, 'down');
         let merged = new Set([...up, ...down]);
         let fullSet = openRestEmpty(merged, table, adjacent, rest);
+        let allOpened = rest.every(element => {return element.dataset.opened == 'true'});
 
         for (let td of tds) {
             if (td.dataset.opened == 'true' && td.dataset.near != undefined) {
                 showNumOfBombs.call(td);
             }
         }
+
+        if (allOpened) {stopGame('true')};
     }
-
-    rest.forEach(element => element.style.backgroundColor = 'lightgrey');
-    rest.forEach(element => element.addEventListener('click', open));
-
+    
+    rest.forEach(element => {
+        element.style.backgroundColor = 'lightgrey';
+        element.dataset.rest = 'true';
+        element.addEventListener('click', open);
+    });
     nearCells.forEach(elem => elem.addEventListener('click', showNumOfBombs));
 
-    bombs.forEach(elem => elem.addEventListener('click', function() {
+    bombs.forEach(elem => elem.addEventListener('click', function() {stopGame('false')}));
+
+    function stopGame(winStatus) {
         nearCells.forEach(elem => elem.removeEventListener('click', showNumOfBombs));
         rest.forEach(element   => element.removeEventListener('click', open));
-    }));
+        bombs.forEach(element  => element.innerHTML = '*');
+        table.dataset.win = winStatus;
+    }
 }
     
 function separateBombsAndNear(table, adjacent, randoms) {
@@ -128,7 +136,7 @@ function separateBombsAndNear(table, adjacent, randoms) {
     
     for (let td of tds) {
         if ( randoms.indexOf(+td.id) != -1 ) {
-            td.innerHTML = '*'
+            td.style.backgroundColor = 'rgb(252, 247, 247)';
             bombs.push(td);
 
             let adjCells = adjacent.get(td.id);
