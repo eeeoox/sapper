@@ -29,12 +29,17 @@
             </li>
         </ul>
     </div>
-    <div id="container"></div>
+    <div id="game-filed" hidden>
+        <div id="timer">30:00</div>
+        <div id="container"></div>
+    </div>
     <script>
         let container = document.getElementById('container');
         let levels = document.getElementsByClassName('level');
         let startBtn = document.getElementById('start-btn');
         let startWindow = document.getElementById('start-window');
+        let gameFiled = document.getElementById('game-filed');
+        let timer = document.getElementById('timer');
 
         for (let level of levels) {
             level.addEventListener('click', function(){
@@ -51,9 +56,41 @@
                 if (level.dataset.picked == 'true'){
                     createTable(level.dataset.column, level.dataset.row, level.dataset.mine, container);
                     startWindow.style.display = 'none';
+                    gameFiled.classList.add('field');
+                    startTimer(timer);
                 }
             }
         });
+
+        function startTimer(timer) {
+            let table = document.querySelector('#container table');
+            let time = timer.innerHTML.split(':');
+            let minites = +time[0];
+            let seconds = +time[1];
+            
+            let interv = setInterval(() => {
+                
+                if (seconds == 0 && minites != 0) {
+                    minites--;
+                    seconds = 59;
+                } 
+                else if (seconds == 0 && minites == 0 || table.dataset.win != undefined) {
+                    clearInterval(interv);
+                } else {
+                    seconds--;
+                }
+                
+                timer.innerHTML = addZero(minites) + ':' + addZero(seconds);
+            }, 1000);
+        }
+        function addZero(num) {
+            let length = num.toString().length;
+
+            if (length == 1) {
+                return num = '0' + num; 
+            } 
+            return num;
+        }
     </script>
 </body>
 </html>
