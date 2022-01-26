@@ -49,12 +49,24 @@ html{
     box-shadow: inset 0 0 3px rgb(58, 58, 58);
 }
 
-
-/* Table styles */
+/*Game-field styles*/
+.field {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 auto;
+    width: fit-content;
+    padding-top: 10vh;
+}
+#timer{
+    width: fit-content;
+    margin-bottom: 10px;
+    font-size: 18px;
+    border: 1px solid black;
+    padding: 5px 10px;
+}
 #container{
     width: fit-content;
-    margin: 0 auto;
-    margin-top: 10vh;
 }
 #container table {
     border-collapse: collapse;
