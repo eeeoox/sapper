@@ -30,7 +30,7 @@
         </ul>
     </div>
     <div id="game-filed" hidden>
-        <div id="timer">30:00</div>
+        <div id="timer">00:05</div>
         <div id="container"></div>
     </div>
     <script>
@@ -39,7 +39,6 @@
         let startBtn = document.getElementById('start-btn');
         let startWindow = document.getElementById('start-window');
         let gameFiled = document.getElementById('game-filed');
-        let timer = document.getElementById('timer');
 
         for (let level of levels) {
             level.addEventListener('click', function(){
@@ -57,12 +56,14 @@
                     createTable(level.dataset.column, level.dataset.row, level.dataset.mine, container);
                     startWindow.style.display = 'none';
                     gameFiled.classList.add('field');
-                    startTimer(timer);
+                    setTimer();
                 }
             }
         });
 
-        function startTimer(timer) {
+        function setTimer() {
+            let container = document.getElementById('container');
+            let timer = document.getElementById('timer');
             let table = document.querySelector('#container table');
             let time = timer.innerHTML.split(':');
             let minites = +time[0];
@@ -74,9 +75,17 @@
                     minites--;
                     seconds = 59;
                 } 
-                else if (seconds == 0 && minites == 0 || table.dataset.win != undefined) {
+                else if (table.dataset.win != undefined) {
                     clearInterval(interv);
-                } else {
+                } 
+                else if (seconds == 0 && minites == 0 ) {
+                    clearInterval(interv);
+
+                    let clone = table.cloneNode(true);
+                    container.removeChild(container.firstChild);
+                    container.appendChild(clone);
+                }
+                else {
                     seconds--;
                 }
                 
