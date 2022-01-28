@@ -125,7 +125,7 @@ function addCellsEventListeners(bombs, nearCells, rest, table, tds, adjacent) {
             }
         }
 
-        if (allOpened) {stopGame('true')};
+        if (allOpened) {stopGame('win')};
     }
     
     rest.forEach(element => {
@@ -135,7 +135,7 @@ function addCellsEventListeners(bombs, nearCells, rest, table, tds, adjacent) {
     });
     nearCells.forEach(elem => elem.addEventListener('click', showNumOfBombs));
 
-    bombs.forEach(elem => elem.addEventListener('click', function() {stopGame('false')}));
+    bombs.forEach(elem => elem.addEventListener('click', function() {stopGame('lose')}));
 
     function stopGame(winStatus) {
         tds.forEach(td => td.removeEventListener('contextmenu', setFlag));

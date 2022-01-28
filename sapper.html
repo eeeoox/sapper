@@ -32,6 +32,10 @@
     <div id="game-filed" hidden>
         <div id="timer">30:00</div>
         <div id="container"></div>
+        <div id="lower-menu">
+            <a href="#!" id="hint" title="Show bombs on click">&#128270;</a>
+            <a href="#!" id="new-game">New Game</a>
+        </div>
     </div>
     <script>
         let container = document.getElementById('container');
@@ -39,6 +43,35 @@
         let startBtn = document.getElementById('start-btn');
         let startWindow = document.getElementById('start-window');
         let gameFiled = document.getElementById('game-filed');
+        let hint = document.getElementById('hint');
+
+        hint.addEventListener('mousedown', function() {
+            let table = document.querySelector('#container table');
+
+            if (table.dataset.win == undefined) {
+                let tds = table.querySelectorAll('td');
+
+                for (let td of tds) {
+                    if (td.dataset.bomb == 'true') {
+                        td.innerHTML = '*';
+                    }
+                }
+            }
+        });
+
+        hint.addEventListener('mouseup', function() {
+            let table = document.querySelector('#container table');
+
+            if (table.dataset.win == undefined) {
+                let tds = table.querySelectorAll('td');
+
+                for (let td of tds) {
+                    if (td.dataset.bomb == 'true') {
+                        td.innerHTML = '';
+                    }
+                }
+            }
+        });
 
         for (let level of levels) {
             level.addEventListener('click', function(){
@@ -84,6 +117,7 @@
                     let clone = table.cloneNode(true);
                     container.removeChild(container.firstChild);
                     container.appendChild(clone);
+                    clone.dataset.win = 'time-is-out';
                 }
                 else {
                     seconds--;

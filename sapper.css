@@ -70,9 +70,24 @@ html{
 }
 #container table {
     border-collapse: collapse;
+    margin-bottom: 10px;
 }
 #container td {
     height: 30px;
     width: 30px;
     border: 1px solid black;
+}
+#lower-menu{
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+#hint, #new-game{
+    border: 1px solid black;
+    padding: 5px;
+    text-decoration: none;
+    color: black;
+}
+#hint{
+    margin-right: 10px;
 }
