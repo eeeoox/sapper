@@ -38,66 +38,66 @@
         </div>
     </div>
     <script>
-        let container = document.getElementById('container');
-        let levels = document.getElementsByClassName('level');
-        let startBtn = document.getElementById('start-btn');
-        let startWindow = document.getElementById('start-window');
-        let gameFiled = document.getElementById('game-filed');
-        let hint = document.getElementById('hint');
-
-        hint.addEventListener('mousedown', function() {
-            let table = document.querySelector('#container table');
-
-            if (table.dataset.win == undefined) {
-                let tds = table.querySelectorAll('td');
-
-                for (let td of tds) {
-                    if (td.dataset.bomb == 'true') {
-                        td.innerHTML = '*';
+        startGame();
+        
+        function startGame() {
+            let startBtn = document.getElementById('start-btn');
+            let levels = document.getElementsByClassName('level');
+            let startWindow = document.getElementById('start-window');
+            let gameFiled = document.getElementById('game-filed');
+            let hint = document.getElementById('hint');
+            let restartBtn = document.getElementById('new-game');
+            let container = document.getElementById('container');
+            let timer = document.getElementById('timer');
+            
+            for (let level of levels) {
+                level.addEventListener('click', function(){
+                    
+                    for (let level of levels) {
+                        level.dataset.picked = false;
                     }
-                }
+                    this.dataset.picked = true;
+                });
             }
-        });
-
-        hint.addEventListener('mouseup', function() {
-            let table = document.querySelector('#container table');
-
-            if (table.dataset.win == undefined) {
-                let tds = table.querySelectorAll('td');
-
-                for (let td of tds) {
-                    if (td.dataset.bomb == 'true') {
-                        td.innerHTML = '';
-                    }
-                }
-            }
-        });
-
-        for (let level of levels) {
-            level.addEventListener('click', function(){
-                
+            
+            startBtn.addEventListener('click', function(){
                 for (let level of levels) {
-                    level.dataset.picked = false;
+                    if (level.dataset.picked == 'true'){
+                        let table = createTable(level.dataset.column, level.dataset.row, level.dataset.mine);
+                        container.append(table);
+                        startWindow.style.display = 'none';
+                        gameFiled.classList.add('field');
+
+                        setTimer(gameFiled, container, timer, table, restartBtn);
+                        addHint(hint, 'mousedown', '*');
+                        addHint(hint, 'mouseup', '');
+                    }
                 }
-                this.dataset.picked = true;
+            });
+            restartBtn.addEventListener('click', function() {
+                startWindow.style.display = 'flex';
+                container.removeChild(container.firstChild);
+                gameFiled.classList.remove('field');
+            })
+        }
+
+        function addHint(hint, event, content) {
+            hint.addEventListener(event, function() {
+                let table = document.querySelector('#container table');
+    
+                if (table.dataset.win == undefined) {
+                    let tds = table.querySelectorAll('td');
+    
+                    for (let td of tds) {
+                        if (td.dataset.bomb == 'true') {
+                            td.innerHTML = content;
+                        }
+                    }
+                }
             });
         }
 
-        startBtn.addEventListener('click', function(){
-            for (let level of levels) {
-                if (level.dataset.picked == 'true'){
-                    createTable(level.dataset.column, level.dataset.row, level.dataset.mine, container);
-                    startWindow.style.display = 'none';
-                    gameFiled.classList.add('field');
-                    setTimer();
-                }
-            }
-        });
-
-        function setTimer() {
-            let container = document.getElementById('container');
-            let timer = document.getElementById('timer');
-            let table = document.querySelector('#container table');
+        function setTimer(gameFiled, container, timer, table, restartBtn) {
             let time = timer.innerHTML.split(':');
             let minites = +time[0];
             let seconds = +time[1];
@@ -124,6 +124,13 @@
                 }
                 
                 timer.innerHTML = addZero(minites) + ':' + addZero(seconds);
+
+                restartBtn.addEventListener('click', function restartTimer() {
+                        clearInterval(interv);
+                        timer.innerHTML = '30:00';
+                        restartBtn.removeEventListener('click', restartTimer);
+                });
+
             }, 1000);
         }
         function addZero(num) {

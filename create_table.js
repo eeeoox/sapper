@@ -1,5 +1,5 @@
 
-function createTable(columns, rows, random, container) {
+function createTable(columns, rows, random) {
     let table = document.createElement('table');
     let idNum = 1; 
 
@@ -15,14 +15,14 @@ function createTable(columns, rows, random, container) {
         }
         table.append(tr);
     }
-    container.append(table);
-
     let adjacent = getAdjacentCells(table, +columns);
 
     guessCells(table, adjacent, +random); 
 
     let tds = table.querySelectorAll('td');
     tds.forEach(td => td.addEventListener('contextmenu', setFlag));
+
+    return table;
 }
 
 function setFlag(e) {
