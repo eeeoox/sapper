@@ -107,35 +107,39 @@ function guessCells(table, adjacent, random) {
         }
     }
     let {bombs, nearCells, rest} = defineCellsRole(table, adjacent, randoms);
-
+    
     addCellsEventListeners(bombs, nearCells, rest, table, tds, adjacent);
 }
 
 function addCellsEventListeners(bombs, nearCells, rest, table, tds, adjacent) {
+    let restAndNear = rest.concat(nearCells);
     let openCells = (e) => {
         let up = openEmptyCells.call(e.target, table, adjacent, rest, 'up');
         let down = openEmptyCells.call(e.target, table, adjacent, rest, 'down');
         let merged = new Set([...up, ...down]);
         let fullSet = openRestEmpty(merged, table, adjacent, rest);
-        let allOpened = rest.every(element => {return element.dataset.opened == 'true'});
+        let opened = rest.every(element => {return element.dataset.opened == 'true'});
 
         for (let td of tds) {
             if (td.dataset.opened == 'true' && td.dataset.near != undefined) {
                 showNumOfBombs.call(td);
             }
         }
-
-        if (allOpened) {stopGame('win')};
     }
-    
     rest.forEach(element => {
         element.style.backgroundColor = 'lightgrey';
         element.dataset.rest = 'true';
         element.addEventListener('click', openCells);
     });
     nearCells.forEach(elem => elem.addEventListener('click', showNumOfBombs));
-
     bombs.forEach(elem => elem.addEventListener('click', function() {stopGame('lose')}));
+    tds.forEach(td => {
+        td.addEventListener('click', function() {
+            let allOpened = restAndNear.every(elem => elem.dataset.opened == 'true');
+            console.log(allOpened);
+            if (allOpened) {stopGame('win')};
+        });
+    });
 
     function stopGame(winStatus) {
         tds.forEach(td => td.removeEventListener('contextmenu', setFlag));
@@ -149,7 +153,7 @@ function addCellsEventListeners(bombs, nearCells, rest, table, tds, adjacent) {
 function defineCellsRole(table, adjacent, randoms) {
     let tds = table.querySelectorAll('td');
     let bombs = [];
-    let nearCells = [];
+    let near = new Set();
     let rest = [];
     
     for (let td of tds) {
@@ -162,17 +166,23 @@ function defineCellsRole(table, adjacent, randoms) {
             [...tds].forEach(element => {
                 if ( adjCells.indexOf(+element.id) != -1 ) {
                     element.dataset.near += ' around' + td.id;
-                    nearCells.push(element);
+                    near.add(element);
                 }
             })
         }
     }
+    let nearCells = Array.from(near);
+
     for (let td of tds) {
         if ( randoms.indexOf(+td.id) == -1 && td.dataset.near == undefined) {
             rest.push(td);
         }
     }
     bombs.forEach(bomb => {
+        let index = nearCells.indexOf(bomb);
+        if (index != -1) {
+            nearCells.splice(index, 1);
+        }
         bomb.removeAttribute('data-near');
         bomb.setAttribute('data-bomb', true);
     });
@@ -184,6 +194,7 @@ function showNumOfBombs() {
         if (this.dataset.near) {
 
             let cellsNum = this.dataset.near.split(' ').length - 1;
+            this.dataset.opened = 'true';
             this.innerHTML = cellsNum;
         }
 }

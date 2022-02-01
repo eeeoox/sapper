@@ -69,8 +69,8 @@
                         gameFiled.classList.add('field');
 
                         setTimer(gameFiled, container, timer, table, restartBtn);
-                        addHint(hint, 'mousedown', '*');
-                        addHint(hint, 'mouseup', '');
+                        addHint(hint, table, 'mousedown', '*');
+                        addHint(hint, table, 'mouseup', '');
                     }
                 }
             });
@@ -81,10 +81,8 @@
             })
         }
 
-        function addHint(hint, event, content) {
+        function addHint(hint, table, event, content) {
             hint.addEventListener(event, function() {
-                let table = document.querySelector('#container table');
-    
                 if (table.dataset.win == undefined) {
                     let tds = table.querySelectorAll('td');
     
@@ -99,31 +97,31 @@
 
         function setTimer(gameFiled, container, timer, table, restartBtn) {
             let time = timer.innerHTML.split(':');
-            let minites = +time[0];
+            let minutes = +time[0];
             let seconds = +time[1];
             
             let interv = setInterval(() => {
                 
-                if (seconds == 0 && minites != 0) {
-                    minites--;
+                if (seconds == 0 && minutes != 0) {
+                    minutes--;
                     seconds = 59;
                 } 
                 else if (table.dataset.win != undefined) {
                     clearInterval(interv);
                 } 
-                else if (seconds == 0 && minites == 0 ) {
+                else if (seconds == 0 && minutes == 0 ) {
                     clearInterval(interv);
 
                     let clone = table.cloneNode(true);
                     container.removeChild(container.firstChild);
                     container.appendChild(clone);
-                    clone.dataset.win = 'time-is-out';
+                    showGameStatus('time-is-out', timer, minutes, seconds)
                 }
                 else {
                     seconds--;
                 }
                 
-                timer.innerHTML = addZero(minites) + ':' + addZero(seconds);
+                timer.innerHTML = addZero(minutes) + ':' + addZero(seconds);
 
                 restartBtn.addEventListener('click', function restartTimer() {
                         clearInterval(interv);
