@@ -30,6 +30,9 @@
         </ul>
     </div>
     <div id="game-filed" hidden>
+        <div id="status" hidden>
+            <div id="closeStatus">&#10006;</div>
+        </div>
         <div id="timer">30:00</div>
         <div id="container"></div>
         <div id="lower-menu">
@@ -49,6 +52,8 @@
             let restartBtn = document.getElementById('new-game');
             let container = document.getElementById('container');
             let timer = document.getElementById('timer');
+            let status = document.getElementById('status');
+            let closeStatus = document.getElementById('closeStatus');
             
             for (let level of levels) {
                 level.addEventListener('click', function(){
@@ -78,6 +83,9 @@
                 startWindow.style.display = 'flex';
                 container.removeChild(container.firstChild);
                 gameFiled.classList.remove('field');
+                status.innerHTML = '';
+                status.append(closeStatus);
+                status.classList.remove('msgWindow');
             })
         }
 
@@ -108,6 +116,7 @@
                 } 
                 else if (table.dataset.win != undefined) {
                     clearInterval(interv);
+                    showGameStatus(table.dataset.win, minutes, seconds)
                 } 
                 else if (seconds == 0 && minutes == 0 ) {
                     clearInterval(interv);
@@ -115,7 +124,7 @@
                     let clone = table.cloneNode(true);
                     container.removeChild(container.firstChild);
                     container.appendChild(clone);
-                    showGameStatus('time-is-out', timer, minutes, seconds)
+                    showGameStatus('time-is-out', minutes, seconds);
                 }
                 else {
                     seconds--;
@@ -138,6 +147,57 @@
                 return num = '0' + num; 
             } 
             return num;
+        }
+
+        function showGameStatus(state, minutes, seconds) {
+            let status = document.getElementById('status');
+            let closeStatus = document.getElementById('closeStatus');
+            let phrases = [];
+            let efficiency = countEfficency(minutes, seconds);
+
+            status.classList.add('msgWindow');
+
+            if (state == 'win') {
+                phrases = [`Congradulations!`, `You\'ve cleared all the field.`, 
+                    `Your time: ${minutes} minutes and ${seconds} seconds`,
+                    `Your efficiency: ${efficiency}%`,
+                    `Press "New Game" to clear another field.`
+                ]
+
+            } else if (state == 'lose') {
+                phrases = ['You\'ve detonated the bomb, sapper... Press "New Game" and practice.'];
+
+            } else if (state == 'time-is-out') {
+                phrases = ['Your time is out... Press "New Game" and play again.'];
+            }
+            let text = getTextElems(phrases);
+            status.append(text);
+
+            closeStatus.addEventListener('click', closeMsgWindow);
+        }
+        function countEfficency(minutes, seconds){
+            let passed = +minutes * 60 + +seconds;
+            let total = 30 * 60;
+            let diff = total - passed;
+            let efficiency = 100 - (diff * 100 / total).toFixed(1);
+            return efficiency;
+        }
+
+        function getTextElems(phrases) {
+            let text = document.createElement('div');
+            text.id = 'text';
+
+            for (const phrase of phrases) {
+                let p = document.createElement('p');
+                p.innerHTML = phrase;
+                text.appendChild(p);
+            }
+            return text;
+        }
+
+        function closeMsgWindow() {
+            let window = this.closest('#status');
+            window.classList.remove('msgWindow');
         }
     </script>
 </body>

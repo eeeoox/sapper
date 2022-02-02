@@ -136,7 +136,6 @@ function addCellsEventListeners(bombs, nearCells, rest, table, tds, adjacent) {
     tds.forEach(td => {
         td.addEventListener('click', function() {
             let allOpened = restAndNear.every(elem => elem.dataset.opened == 'true');
-            console.log(allOpened);
             if (allOpened) {stopGame('win')};
         });
     });
