@@ -18,10 +18,10 @@ html{
     display: inline-block;
     text-align: center;
     margin: 0;
-    margin-bottom: 10vh;
+    margin-bottom: calc(10vh + 50px);
     font-size: 18px;
 }
-#start-list{
+#main-menu{
     padding: 0;
     margin: 0px auto;
     list-style: none;
@@ -29,7 +29,7 @@ html{
     position: relative;
     min-width: 90px;
 }
-.start-list-item a{
+.list-item a, #rule a{
     display: block;
     text-align: center;
     border: 1px solid black;
@@ -37,16 +37,75 @@ html{
     text-decoration: none;
     padding: 10px 0;
 }
-.start-list-item a:hover, .start-list-item a:active {
-    color: black;
-    background-color: gainsboro;
+.list-item a{
+    min-height: 40px;
+    max-height: 80px;
 }
-.start-list-item a:focus{
-    color: black;
-    background-color: rgb(165, 165, 165);
+#rule-title{
+    margin-top: 0;
+    margin-bottom: 25px;
 }
-.start-list-item a:focus{
-    box-shadow: inset 0 0 3px rgb(58, 58, 58);
+#rule a{
+    position: absolute;
+    width: 100%;
+    height: 40px;
+    top: -50px;
+    overflow: hidden;
+    background-color: white;
+    z-index: 1;
+}
+#rule a:active{
+    color: rgb(85, 26, 139);
+}
+.rule-open a{
+    cursor: default;
+    animation: open 1s both;
+}
+.rule-close a{
+    cursor: pointer;
+    animation: close 1s both;
+}
+@keyframes open{
+    0% {
+        width: 100%;
+        height: 40px;
+        left: 0px;
+    }
+    30% {
+        width: 110%;
+        height: 40px;
+        left: -5%;
+    }
+    100% {
+        width: 110%;
+        height: 300px;
+        left: -5%;
+    }
+}
+@keyframes close{
+    0% {
+        width: 110%;
+        height: 300px;
+        left: -5%;
+    }
+    30% {
+        width: 110%;
+        height: 40px;
+        left: -5%;
+    }
+    100% {
+        width: 100%;
+        height: 40px;
+        left: 0px;
+    }
+}
+#rule-list{
+    text-align: start;
+    margin-bottom: 25px;
+}
+.list-item a:hover, .list-item a:active, .focused{
+    color: black;
+    box-shadow: inset 0 0 5px rgb(58, 58, 58);
 }
 
 /*Game-field styles*/

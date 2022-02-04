@@ -10,21 +10,33 @@
 </head>
 <body>
     <div id="start-window">
-        <p id="start-message">Welcome, sapper! We need your help... Choose your skills and get started.</p>
-        <ul id="start-list">
-            <li class="start-list-item">
+        <p id="start-message">Welcome, sapper! We need your help... Write rules, choose your skills and get started.</p>
+        <ul id="main-menu">
+            <li id="rule">
+                <a href="#!">
+                    <p id="rule-title">Rules</p>
+                    <ul id="rule-list">
+                        <li>rule 1</li>
+                        <li>rule 2</li>
+                        <li>rule 3</li>
+                        <li>rule 4</li>
+                        <li>rule 5</li>
+                    </ul>
+                    <button href="#!" id="rule-btn">Got it</button>
+                </a>
+            </li>
+            <li class="list-item">
                 <a href="#!" class="level" data-column="8" data-row="8" data-mine="10">Young sapper (8x8)</a>
             </li>
-
-            <li class="start-list-item">
+            <li class="list-item">
                 <a href="#!" class="level" data-column="15" data-row="15" data-mine="40">Experienced sapper (15x15)</a>
             </li>
 
-            <li class="start-list-item">
+            <li class="list-item">
                 <a href="#!" class="level" data-column="30" data-row="20" data-mine="100">Professional sapper (20x30)</a>
             </li>
 
-            <li class="start-list-item">
+            <li class="list-item">
                 <a href="#!" id="start-btn">Start</a>
             </li>
         </ul>
@@ -45,6 +57,8 @@
         
         function startGame() {
             let startBtn = document.getElementById('start-btn');
+            let rule = document.getElementById('rule');
+            let ruleBtn = document.getElementById('rule-btn');
             let levels = document.getElementsByClassName('level');
             let startWindow = document.getElementById('start-window');
             let gameFiled = document.getElementById('game-filed');
@@ -54,21 +68,39 @@
             let timer = document.getElementById('timer');
             let status = document.getElementById('status');
             let closeStatus = document.getElementById('closeStatus');
+
+            rule.addEventListener('click', function(){
+                this.classList.remove('rule-close');
+                this.classList.add('rule-open');
+            });
             
+            ruleBtn.addEventListener('click', function clear(e) {
+                e.stopPropagation();
+
+                let parent = this.closest('li');
+                parent.classList.remove('rule-open');
+                parent.classList.add('rule-close');
+            });
+
             for (let level of levels) {
                 level.addEventListener('click', function(){
                     
                     for (let level of levels) {
                         level.dataset.picked = false;
+                        level.classList.remove('focused');
                     }
                     this.dataset.picked = true;
+                    this.classList.toggle('focused');
                 });
             }
             
             startBtn.addEventListener('click', function(){
                 for (let level of levels) {
+                    level.classList.remove('focused');
+
                     if (level.dataset.picked == 'true'){
                         let table = createTable(level.dataset.column, level.dataset.row, level.dataset.mine);
+                        rule.classList.remove('rule-close');
                         container.append(table);
                         startWindow.style.display = 'none';
                         gameFiled.classList.add('field');
