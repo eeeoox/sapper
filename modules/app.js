@@ -5,11 +5,14 @@ import showHint from './showHint.js'
 function startGame() {
     let startBtn = document.getElementById('start-btn');
     let rule = document.getElementById('rule');
+    let ruleItem = document.getElementById('rule-item');
     let ruleBtn = document.getElementById('rule-btn');
     let levels = document.getElementsByClassName('level');
+    let menu = document.getElementsByClassName('list-item');
     let startWindow = document.getElementById('start-window');
     let gameFiled = document.getElementById('game-filed');
     let hint = document.getElementById('hint');
+    let hintImg = document.getElementById('hint-img');
     let restartBtn = document.getElementById('new-game');
     let container = document.getElementById('container');
     let timer = document.getElementById('timer');
@@ -31,6 +34,9 @@ function startGame() {
     rule.addEventListener('click', function(){
         this.classList.remove('rule-close');
         this.classList.add('rule-open');
+        [...menu].forEach(item => {
+            item.style.display = 'none';
+        });
     });
     
     ruleBtn.addEventListener('click', function clear(e) {
@@ -39,6 +45,10 @@ function startGame() {
         let parent = this.closest('li');
         parent.classList.remove('rule-open');
         parent.classList.add('rule-close');
+        [...menu].forEach(item => {
+            item.style.display = 'block';
+        });
+        ruleItem.scrollTop = 0;
     });
 
     
@@ -52,10 +62,14 @@ function startGame() {
                 container.append(table);
                 startWindow.style.display = 'none';
                 gameFiled.classList.add('field');
-
+                
                 setTimer(container, timer, table, restartBtn);
-                showHint(hint, table, 'mousedown', '*');
-                showHint(hint, table, 'mouseup', '');
+
+                let events = {'mousedown':'&#10007;', 'mouseup': '', 'mouseout': ''}
+                for (let event in events) {
+                    let content = events[event];
+                    showHint(hint, hintImg, table, event, content);
+                }
             }
         }
     });

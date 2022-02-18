@@ -1,9 +1,21 @@
 /* Common styles */
+@font-face {
+    font-family: 'Kbanavoxlost';
+    font-style: normal;
+    font-weight: normal;
+    src: url('./fonts/Kbanavoxlost-gajq.ttf') format('opentype');
+}
 html{
     box-sizing: border-box;
+    font-family: 'Kbanavoxlost', Georgia, 'Times New Roman', Times, serif;
+    letter-spacing: 2px;
 }
 *, *::after, *::before{
     box-sizing: inherit;
+}
+body{
+    background: url(./images/background.jpg) no-repeat center fixed;
+    background-size: cover;
 }
 
 
@@ -12,14 +24,24 @@ html{
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 10vh;
+    padding-top: 20vh;
 }
 #start-message{
     display: inline-block;
     text-align: center;
     margin: 0;
     margin-bottom: calc(10vh + 50px);
-    font-size: 18px;
+    font-size: 24px;
+}
+@media (max-width:900px) {
+    #start-message{
+        font-size: 18px;
+    }
+}
+@media (max-width:900px) {
+    #start-message{
+        font-size: 18px;
+    }
 }
 #main-menu{
     padding: 0;
@@ -28,34 +50,45 @@ html{
     width: 30vw;
     position: relative;
     min-width: 90px;
+    max-height: 50vh;
 }
-.list-item a, #rule a{
+#main-menu a{
     display: block;
     text-align: center;
-    border: 1px solid black;
+    box-shadow: 0 2px 5px rgb(71, 71, 71);
+    background-color: rgb(143, 138, 138);
+    color: white;
+    border-radius: 5px;
     margin-bottom: 10px;
     text-decoration: none;
-    padding: 10px 0;
+    padding: 18px 5px;
+    height: 55px;
+    transition: all 0.5s;
 }
-.list-item a{
-    min-height: 40px;
-    max-height: 80px;
+@media (max-width:500px) {
+    #main-menu a{
+        font-size: 12px;
+    }
+}
+#start-btn:active, .focused{
+    transform: scale(1.05);
+    background-color: white!important;
+    color: black!important;
+    box-shadow: inset 0 0 10px rgb(126, 125, 125)!important;
 }
 #rule-title{
     margin-top: 0;
-    margin-bottom: 25px;
+    margin-bottom: 18px;
 }
 #rule a{
     position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     width: 100%;
-    height: 40px;
-    top: -50px;
+    top: -65px;
     overflow: hidden;
-    background-color: white;
     z-index: 1;
-}
-#rule a:active{
-    color: rgb(85, 26, 139);
 }
 .rule-open a{
     cursor: default;
@@ -63,49 +96,82 @@ html{
 }
 .rule-close a{
     cursor: pointer;
-    animation: close 1s both;
+    animation: close 1.5s both;
 }
 @keyframes open{
     0% {
         width: 100%;
-        height: 40px;
+        height: 55px;
         left: 0px;
+        overflow: hidden;
+        box-shadow: 0 2px 5px rgb(71, 71, 71);
+        background-color: rgb(143, 138, 138);
+        color: white;
     }
     30% {
         width: 110%;
-        height: 40px;
+        height: 55px;
         left: -5%;
+        overflow: hidden;
     }
     100% {
         width: 110%;
-        height: 300px;
+        height: 50vh;
         left: -5%;
+        overflow: scroll;
+        background-color: white;
+        color: black;
+        box-shadow: inset 0 0 10px rgb(126, 125, 125);
     }
 }
 @keyframes close{
     0% {
         width: 110%;
-        height: 300px;
+        height: 50vh;
         left: -5%;
+        overflow: scroll;
+        background-color: white;
+        color: black;
+        box-shadow: inset 0 0 10px rgb(126, 125, 125);
     }
     30% {
         width: 110%;
-        height: 40px;
+        height: 55px;
         left: -5%;
+        overflow: hidden;
     }
     100% {
         width: 100%;
-        height: 40px;
+        height: 55px;
         left: 0px;
+        overflow: hidden;
+        box-shadow: 0 2px 5px rgb(71, 71, 71);
+        background-color: rgb(143, 138, 138);
+        color: white;
     }
 }
-#rule-list{
-    text-align: start;
-    margin-bottom: 25px;
+.rule-point{
+    text-align: left;
+    padding-left: 25px;
 }
-.list-item a:hover, .list-item a:active, .focused{
-    color: black;
-    box-shadow: inset 0 0 5px rgb(58, 58, 58);
+.rule-point::before{
+    content: '-';
+    position: absolute;
+    left: 15px;
+}
+#rule-btn{
+    margin: 0px auto;
+    padding: 5px;
+    box-shadow: 0 1px 3px rgb(71, 71, 71);
+    background-color: white;
+    border-radius: 5px;
+    transition: 1s;
+}
+#rule-btn:hover{
+    cursor: pointer;
+}
+#rule-btn:active{
+    box-shadow: inset 0 1px 3px rgb(71, 71, 71);
 }
 
 /*Game-field styles*/
@@ -115,51 +181,91 @@ html{
     align-items: center;
     margin: 0 auto;
     width: fit-content;
-    padding-top: 10vh;
+    padding-top: 7vh;
     position: relative;
-}
-#timer{
-    width: fit-content;
-    margin-bottom: 10px;
-    font-size: 18px;
-    border: 1px solid black;
-    padding: 5px 10px;
-}
-#container{
-    width: fit-content;
-}
-#container table {
-    border-collapse: collapse;
-    margin-bottom: 10px;
-}
-#container td {
-    height: 30px;
-    width: 30px;
-    border: 1px solid black;
 }
 #lower-menu{
     width: 100%;
     display: flex;
     justify-content: flex-end;
+    margin-top: 10px;
 }
-#hint, #new-game{
-    border: 1px solid black;
-    padding: 5px;
+#hint, #new-game, #timer{
+    text-align: center;
+    height: 30px;
+    line-height: 30px;
     text-decoration: none;
-    color: black;
+    box-shadow: 0 2px 5px rgb(71, 71, 71);
+    background-color: rgb(143, 138, 138);
+    border-radius: 5px;
+    color: white;
+}
+#timer{
+    width: 80px;
+    text-align: center;
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+#hint-img{
+    width: 80%;
+    height: 80%;
+    background: url(./images/closed_eye.png) center;
+    background-size: cover;
+    z-index: 1;
+}
+.hint-eye{
+    background: url(./images/opened_eye.png) center!important;
+    background-size: cover!important;
 }
 #hint{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
     margin-right: 10px;
+    transition: 0.5s;
 }
+#new-game{
+    padding: 0px 5px;
+}
+#hint:active, #new-game:active{
+    background-color: white;
+    color: black;
+    box-shadow: inset 0 0 10px rgb(126, 125, 125);
+}
+#container{
+    width: fit-content;
+    background-color: white;
+    border-radius: 5px;
+}
+#container table {
+    background-color: rgba(0, 0, 0, 0.6);
+    border-radius: 5px;
+}
+#container td {
+    height: 35px;
+    width: 35px;
+    text-align: center;
+}
+.cell-closed{
+    background-color: rgb(143, 138, 138);
+    box-shadow: inset 0 2px 5px rgb(233, 232, 232);
+}
+.cell-opened{
+    background-color: rgb(233, 232, 232);
+}
+
+/* Message if game ends */
 .msgWindow{
     display: flex;
     position: absolute;
     height: fit-content;
     width: 300px;
     top: 34%;
-    border: 1px solid black;
     background-color: white;
-    min-width: 90px;
+    box-shadow: 0 2px 5px rgb(71, 71, 71);
+    border-radius: 5px;
+    min-width: 90px;;
 }
 #text{
     padding: 35px 10px;
@@ -171,7 +277,10 @@ html{
 #closeStatus{
     position: absolute;
     right: 5px;
+    top: 5px;
 }
 #closeStatus:hover{
     cursor: pointer;
 }
+
+

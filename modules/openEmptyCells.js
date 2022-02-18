@@ -22,9 +22,10 @@ export function openEmptyCells(table, adjacent, rest, direction) {
     
     for (let td of tds) {
         if ([...set].indexOf(+td.id) != -1) {
-            td.style.backgroundColor = 'orange';
             td.innerHTML = '';
             td.dataset.opened = true;
+            td.classList.remove('cell-closed');
+            td.classList.add('cell-opened');
         }
     }
     

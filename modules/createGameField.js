@@ -23,6 +23,7 @@ function createGameField(columns, rows, random) {
 
     let tds = table.querySelectorAll('td');
     tds.forEach(td => td.addEventListener('contextmenu', setFlag));
+    tds.forEach(td => td.classList.add('cell-closed'));
 
     return table;
 }
@@ -129,7 +130,6 @@ function addCellsEventListeners(bombs, nearCells, rest, table, tds, adjacent) {
         }
     }
     rest.forEach(element => {
-        element.style.backgroundColor = 'lightgrey';
         element.dataset.rest = 'true';
         element.addEventListener('click', openCells);
     });
@@ -146,8 +146,19 @@ function addCellsEventListeners(bombs, nearCells, rest, table, tds, adjacent) {
         tds.forEach(td => td.removeEventListener('contextmenu', setFlag));
         nearCells.forEach(elem => elem.removeEventListener('click', showNumOfBombs));
         rest.forEach(element   => element.removeEventListener('click', openCells));
-        bombs.forEach(element  => element.innerHTML = '*');
         table.dataset.win = winStatus;
+
+        if (winStatus === 'win') {
+            bombs.forEach(element  => {
+                element.innerHTML = '🚩';
+            });
+        } else {
+            bombs.forEach(element  => {
+                element.innerHTML = '&#128165'
+                element.classList.remove('cell-closed');
+                element.classList.add('cell-opened');
+            });
+        }
     }
 }
     
@@ -159,7 +170,6 @@ function defineCellsRole(table, adjacent, randoms) {
     
     for (let td of tds) {
         if ( randoms.indexOf(+td.id) != -1 ) {
-            td.style.backgroundColor = 'rgb(252, 247, 247)';
             bombs.push(td);
 
             let adjCells = adjacent.get(td.id);
@@ -197,6 +207,8 @@ function showNumOfBombs() {
             let cellsNum = this.dataset.near.split(' ').length - 1;
             this.dataset.opened = 'true';
             this.innerHTML = cellsNum;
+            this.classList.remove('cell-closed');
+            this.classList.add('cell-opened');
         }
 }
 

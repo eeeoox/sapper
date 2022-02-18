@@ -1,4 +1,4 @@
-function showHint(hint, table, event, content) {
+function showHint(hint, hintImg, table, event, content) {
     hint.addEventListener(event, function() {
         if (table.dataset.win == undefined) {
             let tds = table.querySelectorAll('td');
@@ -8,6 +8,11 @@ function showHint(hint, table, event, content) {
                     td.innerHTML = content;
                 }
             }
+        }
+        if (event == 'mousedown' && event != 'mouseout') {
+            hintImg.classList.add('hint-eye');
+        } else {
+            hintImg.classList.remove('hint-eye');
         }
     });
 }
