@@ -3,7 +3,7 @@
     font-family: 'Kbanavoxlost';
     font-style: normal;
     font-weight: normal;
-    src: url('./fonts/Kbanavoxlost-gajq.ttf') format('opentype');
+    src: url('../fonts/Kbanavoxlost-gajq.ttf') format('opentype');
 }
 html{
     box-sizing: border-box;
@@ -14,7 +14,7 @@ html{
     box-sizing: inherit;
 }
 body{
-    background: url(./images/background.jpg) no-repeat center fixed;
+    background: url('../images/background.jpg') no-repeat center fixed;
     background-size: cover;
 }
 
@@ -209,12 +209,12 @@ body{
 #hint-img{
     width: 80%;
     height: 80%;
-    background: url(./images/closed_eye.png) center;
+    background: url('../images/closed_eye.png') center;
     background-size: cover;
     z-index: 1;
 }
 .hint-eye{
-    background: url(./images/opened_eye.png) center!important;
+    background: url('../images/opened_eye.png') center!important;
     background-size: cover!important;
 }
 #hint{
