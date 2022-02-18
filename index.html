@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sapper</title>
+    <link rel="stylesheet" href="styles/sapper.css">
+    <script type="module" src="modules/app.js"></script>
+</head>
+<body>
+    <div id="start-window">
+        <p id="start-message">Welcome, sapper! We need your help... Write rules, choose your skills and get started.</p>
+        <ul id="main-menu">
+            <li id="rule">
+                <a id="rule-item" href="#!">
+                    <p id="rule-title">Rules</p>
+                    <p class="rule-point">The board is divided into cells, with mines randomly distributed.</p>
+                    <p class="rule-point">To win, you need to open all the cells.</p>
+                    <p class="rule-point">The number on a cell shows the number of mines adjacent to it (Using this information, you can determine cells that are safe, and cells that contain mines).</p>
+                    <p class="rule-point">Cells suspected of being mines can be marked with a flag 🚩 using the right mouse button.</p>
+                    <p class="rule-point">You can use hint button &#128064;, just hold on right mouse button. It will show you where bombs are placed &#10007;.</p>
+                    <p class="rule-point">Detonated bombs are marked as &#128165;.</p>
+                    <div href="#!" id="rule-btn">Got it</div>
+                </a>
+            </li>
+            <li class="list-item">
+                <a href="#!" class="level" data-column="8" data-row="8" data-mine="10">Young sapper (8x8)</a>
+            </li>
+            <li class="list-item">
+                <a href="#!" class="level" data-column="15" data-row="15" data-mine="40">Experienced sapper (15x15)</a>
+            </li>
+
+            <li class="list-item">
+                <a href="#!" class="level" data-column="30" data-row="20" data-mine="100">Professional sapper (20x30)</a>
+            </li>
+
+            <li class="list-item">
+                <a href="#!" id="start-btn">Start</a>
+            </li>
+        </ul>
+    </div>
+    <div id="game-filed" hidden>
+        <div id="status" hidden>
+            <div id="closeStatus">&#10007;</div>
+        </div>
+        <div id="timer">30:00</div>
+        <div id="container"></div>
+        <div id="lower-menu">
+            <a href="#!" id="hint" title="Show bombs on click"><div id="hint-img"></div></a>
+            <a href="#!" id="new-game">New Game</a>
+        </div>
+    </div>
+</body>
+</html>
