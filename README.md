@@ -12,7 +12,7 @@ To start playing:
 
 `npm install`
 
-3. Run following script: 
+3. Run following comand: 
 
 `npm start`
 
