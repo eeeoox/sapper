@@ -17,3 +17,5 @@ To start playing:
 `npm start`
 
 4. Open [http://127.0.0.1:8080] to view the game in your browser.
+
+Demo: https://eeeoox.github.io/sapper
